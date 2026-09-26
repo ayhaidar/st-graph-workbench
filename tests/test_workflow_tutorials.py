@@ -15,6 +15,7 @@ from graph_test_helpers import (
     open_toolbox_menu,
     select_nodes,
     wait_for_app_idle,
+    wait_for_cy_ready,
 )
 
 
@@ -26,11 +27,23 @@ def open_lesson(page, port, slug):
 
 
 def open_crud_dialog(page, graph, button_id):
+    # A completed Streamlit rerun gives the component its current trigger bridge.
+    wait_for_app_idle(page)
+    wait_for_cy_ready(graph)
     open_toolbox_menu(graph, "crudControls")
     button = graph.locator(f"#{button_id}")
-    expect(button).to_be_enabled()
+    expect(button).to_be_visible(timeout=15000)
+    expect(button).to_be_enabled(timeout=15000)
+    button.scroll_into_view_if_needed()
+    expect(button).to_be_attached()
+    # Opening a native details menu is synchronous, but the component may have
+    # just received new data. Do not click through an unfinished app rerun.
+    wait_for_app_idle(page)
     button.click()
     dialog = page.get_by_role("dialog")
+    # Attachment proves that Python received the CRUD intent and rendered the
+    # dialog; visibility then verifies that it is ready for user interaction.
+    expect(dialog).to_have_count(1, timeout=15000)
     expect(dialog).to_be_visible(timeout=15000)
     wait_for_app_idle(page)
     return dialog
