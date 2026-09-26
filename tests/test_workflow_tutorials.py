@@ -5,7 +5,7 @@ import re
 
 import pytest
 from PIL import Image, ImageStat
-from playwright.sync_api import expect
+from playwright.sync_api import Locator, expect
 
 from graph_test_helpers import (
     get_component,
@@ -25,9 +25,27 @@ def open_lesson(page, port, slug):
     return component
 
 
-def choose(page, label, value):
-    page.get_by_role("combobox", name=label, exact=True).click()
-    page.get_by_role("option", name=value, exact=True).click()
+def open_crud_dialog(page, graph, button_id):
+    open_toolbox_menu(graph, "crudControls")
+    button = graph.locator(f"#{button_id}")
+    expect(button).to_be_enabled()
+    button.click()
+    dialog = page.get_by_role("dialog")
+    expect(dialog).to_be_visible(timeout=15000)
+    wait_for_app_idle(page)
+    return dialog
+
+
+def choose(page, label, value, *, within: Locator | None = None):
+    scope = within if within is not None else page
+    combobox = scope.get_by_role("combobox", name=label, exact=True)
+    expect(combobox).to_be_visible()
+    expect(combobox).to_be_enabled()
+    combobox.scroll_into_view_if_needed()
+    combobox.click()
+    option = page.get_by_role("option", name=value, exact=True)
+    expect(option).to_be_visible()
+    option.click()
 
 
 def confirm(page):
@@ -57,10 +75,8 @@ def test_crud_accepts_each_node_and_relationship_type(page, run_streamlit):
         "Checkpoint (CHECKPOINT)",
     ]
     for index, choice in enumerate(node_types):
-        open_toolbox_menu(graph, "crudControls")
-        graph.locator("#crudCreateNode").click()
-        choose(page, "Node type", choice)
-        dialog = page.get_by_role("dialog")
+        dialog = open_crud_dialog(page, graph, "crudCreateNode")
+        choose(page, "Node type", choice, within=dialog)
         dialog.get_by_role("textbox", name="Record ID", exact=True).fill(
             f"record-{index}"
         )
@@ -88,18 +104,17 @@ def test_crud_accepts_each_node_and_relationship_type(page, run_streamlit):
         ["Seen At", "Registered To", "Uses", "Seen Near", "Related"]
     ):
         select_nodes(graph, ["ABC123", f"record-{index}"])
-        open_toolbox_menu(graph, "crudControls")
-        graph.locator("#crudCreateEdge").click()
-        expect(page.get_by_role("combobox", name="Source", exact=True)).to_have_value(
+        dialog = open_crud_dialog(page, graph, "crudCreateEdge")
+        expect(dialog.get_by_role("combobox", name="Source", exact=True)).to_have_value(
             "ABC123"
         )
-        expect(page.get_by_role("combobox", name="Target", exact=True)).to_have_value(
+        expect(dialog.get_by_role("combobox", name="Target", exact=True)).to_have_value(
             f"record-{index}"
         )
-        choose(page, "Relationship type", label)
-        choose(page, "Source", "ABC123")
-        choose(page, "Target", f"record-{index}")
-        page.get_by_role("textbox", name="Record ID", exact=True).fill(
+        choose(page, "Relationship type", label, within=dialog)
+        choose(page, "Source", "ABC123", within=dialog)
+        choose(page, "Target", f"record-{index}", within=dialog)
+        dialog.get_by_role("textbox", name="Record ID", exact=True).fill(
             f"typed-edge-{index}"
         )
         confirm(page)
@@ -117,10 +132,9 @@ def test_crud_accepts_each_node_and_relationship_type(page, run_streamlit):
             f"record-{index}",
         )
         assert cy.evaluate("el => el._cyreg.cy.scratch('workflow')")
-    open_toolbox_menu(graph, "crudControls")
-    graph.locator("#crudCreateNode").click()
-    page.get_by_role("textbox", name="Record ID", exact=True).fill("ABC123")
-    page.get_by_role("button", name=re.compile("Confirm$")).click()
+    dialog = open_crud_dialog(page, graph, "crudCreateNode")
+    dialog.get_by_role("textbox", name="Record ID", exact=True).fill("ABC123")
+    dialog.get_by_role("button", name=re.compile("Confirm$")).click()
     expect(
         page.get_by_text("Use a non-empty, unique record ID.", exact=True)
     ).to_be_visible()
@@ -197,11 +211,10 @@ def test_workflow_lessons_have_readable_outputs(
         page.get_by_role("heading", name="CRUD or browser editing?", exact=True)
     ).to_be_visible()
     if slug == "crud":
-        open_toolbox_menu(graph, "crudControls")
-        graph.locator("#crudCreateNode").click()
-        choose(page, "Node type", "Camera (CAMERA)")
-        page.get_by_role("textbox", name="Record ID", exact=True).fill("camera-8")
-        page.get_by_role("dialog").screenshot(path=tmp_path / f"crud-types-{width}.png")
+        dialog = open_crud_dialog(page, graph, "crudCreateNode")
+        choose(page, "Node type", "Camera (CAMERA)", within=dialog)
+        dialog.get_by_role("textbox", name="Record ID", exact=True).fill("camera-8")
+        dialog.screenshot(path=tmp_path / f"crud-types-{width}.png")
         confirm(page)
         section = "Accepted Python records"
     else:

@@ -34,6 +34,15 @@ def get_toolbox_button(component, button_id):
     return component.locator(f"#{button_id}")
 
 
+def hide_selection_details(component):
+    """Keep the selection while exposing graph coordinates to real pointer input."""
+    open_toolbox_menu(component, "selectionControls")
+    details = component.get_by_label("Show selection details", exact=True)
+    details.uncheck()
+    expect(component.locator("#infopanel")).to_be_hidden()
+    component.locator("#selectionControls > summary").click()
+
+
 def test_component_renders_without_v1_iframe(page: Page):
     page.get_by_role("link", name=PAGE_NAME).click()
     page.wait_for_load_state("networkidle")
@@ -150,6 +159,9 @@ def test_expand_action_can_collapse_rendered_nodes(page: Page):
     expect(get_toolbox_button(component, "nodeActionsExpand")).to_have_attribute(
         "title", "Expand Node"
     )
+    # The floating details panel may cover this node after selection. Hiding the
+    # panel preserves the selection while making the real canvas click possible.
+    hide_selection_details(component)
     double_click_node(component, NODE_ID)
     wait_for_node_ids(component, EXPANDED_NODE_IDS)
     expect(get_badge(component, NODE_ID)).to_have_text("-2")
