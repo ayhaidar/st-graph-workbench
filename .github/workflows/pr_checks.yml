@@ -1,0 +1,139 @@
+name: Continuous integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  lint_py:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+        with:
+          enable-cache: true
+      - name: Install locked development dependencies
+        run: uv sync --extra dev --extra docs --frozen
+      - name: Ruff check
+        run: uv run ruff check --output-format=github
+      - name: MyPy check
+        run: uv run mypy st_graph_workbench/
+
+  lint_js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: ./.github/actions/setup-node
+        with:
+          node-version: "24.x"
+      - name: Check JavaScript formatting
+        working-directory: ./st_graph_workbench/frontend/
+        run: npm run format
+      - name: Check JavaScript linting
+        working-directory: ./st_graph_workbench/frontend/
+        run: npm run lint
+
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+        with:
+          enable-cache: true
+      - name: Install locked documentation dependencies
+        run: uv sync --extra docs --frozen
+      - name: Build documentation
+        run: uv run mkdocs build --strict
+
+  minimum_dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.10"
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+        with:
+          enable-cache: true
+      - name: Install declared minimum dependencies
+        run: |
+          uv venv .venv-minimum --python 3.10
+          uv pip install --python .venv-minimum/bin/python . "pandas==2.2.2" "streamlit==1.57.0"
+      - name: Verify minimum dependency behavior
+        run: .venv-minimum/bin/python -I scripts/verify_minimum_dependencies.py
+
+  package:
+    needs: [lint_py, lint_js, docs, minimum_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: ./.github/actions/setup-python
+        with:
+          python-version: "3.12"
+      - uses: ./.github/actions/setup-node
+        with:
+          node-version: "24.x"
+      - name: Verify installed distribution
+        run: uv run python scripts/verify_release.py
+
+  compatibility:
+    needs: [lint_py, lint_js, docs, minimum_dependencies]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        PY_VERSION: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: ${{ matrix.PY_VERSION }}
+      - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5
+        with:
+          enable-cache: true
+      - name: Install locked Python dependencies
+        run: uv sync --extra dev --frozen --python ${{ matrix.PY_VERSION }}
+      - name: Run core Python compatibility tests
+        run: >-
+          uv run pytest --reruns=0
+          tests/test_elements.py
+          tests/test_events.py
+          tests/test_event_contract.py
+          tests/test_expansion.py
+          tests/test_graph_commands.py
+          tests/test_icons.py
+          tests/test_ids.py
+          tests/test_literal_option_sets.py
+          tests/test_records.py
+          tests/test_request_delivery.py
+          tests/test_validation.py
+
+  test:
+    needs: [lint_py, lint_js, docs, minimum_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: ./.github/actions/setup-python
+        with:
+          python-version: "3.12"
+      - uses: ./.github/actions/setup-node
+        with:
+          node-version: "24.x"
+      - name: Run the complete suite without retries
+        run: uv run pytest --reruns=0

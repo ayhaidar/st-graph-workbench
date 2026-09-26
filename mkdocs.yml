@@ -1,0 +1,133 @@
+site_name: st-graph-workbench
+site_url: https://ayhaidar.github.io/st-graph-workbench/
+site_description: Interactive Cytoscape.js graph analysis for Streamlit
+repo_name: ayhaidar/st-graph-workbench
+repo_url: https://github.com/ayhaidar/st-graph-workbench
+edit_uri: edit/main/docs/
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: en
+  logo: assets/images/logo_icon.png
+  favicon: assets/images/logo_icon.png
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: blue grey
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: blue grey
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [.] 
+          options:
+            docstring_style: numpy
+            docstring_section_style: list
+            heading_level: 2
+            members_order: source
+            merge_init_into_class: true
+            separate_signature: true
+            show_object_full_path: false
+            show_root_heading: true
+            show_signature_annotations: true
+            show_source: true
+            signature_crossrefs: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path:
+        - .
+      check_paths: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+extra_css:
+  - stylesheets/extra.css
+
+watch:
+  - st_graph_workbench
+  - examples
+
+nav:
+  - Home: index.md
+  - Start here:
+      - In action: getting-started/in-action.md
+      - Installation: getting-started/installation.md
+      - Quick start: getting-started/quickstart.md
+      - Interactive tutorials: getting-started/tutorials.md
+      - How it works: getting-started/mental-model.md
+  - Core concepts:
+      - Graph elements: concepts/elements.md
+      - Tables and records: concepts/records.md
+      - Events, state, and synchronization: concepts/events-state.md
+  - Feature guides:
+      - Rendering and layouts: guides/rendering-layouts.md
+      - Styling and icons: guides/styling-icons.md
+      - Selection and search: guides/selection-search.md
+      - Expansion and visibility: guides/expansion-visibility.md
+      - Graph analysis: guides/analysis.md
+      - CRUD and data loading: guides/crud.md
+      - Graph commands: guides/commands.md
+      - Editing and viewport tools: guides/editing-viewport.md
+      - Events, exports, and positions: guides/events-exports.md
+      - Compound graphs and performance: guides/compound-performance.md
+      - Progressive loading: guides/progressive-loading.md
+  - Recipes:
+      - Intelligence workflow: recipes/intelligence-workflow.md
+      - Progressive expansion: recipes/progressive-expansion.md
+      - Persisted layouts and scale: recipes/persistence-scale.md
+      - Multiple graph instances: recipes/multiple-instances.md
+  - API reference:
+      - Reference overview: reference/index.md
+      - Component: reference/component.md
+      - Styling: reference/styles.md
+      - Data and element helpers: reference/data-elements.md
+      - Graph commands: reference/commands.md
+      - Managed expansion: reference/expansion.md
+      - Events and types: reference/events-types.md
+      - Capability matrix: reference/capability-matrix.md
+  - Advanced:
+      - Troubleshooting: advanced/troubleshooting.md
+      - Changelog: changelog.md
+      - License and attribution: license.md
+  - Contributor guide:
+      - Frontend architecture: advanced/architecture.md
+      - Development and packaging: advanced/development.md
+      - Contributing: https://github.com/ayhaidar/st-graph-workbench/blob/main/CONTRIBUTING.md
+      - Security policy: https://github.com/ayhaidar/st-graph-workbench/blob/main/SECURITY.md
+copyright: Copyright &copy; 2026 Ali Haidar. Licensed under Apache 2.0.

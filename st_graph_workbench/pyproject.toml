@@ -1,0 +1,7 @@
+[project]
+name = "st_graph_workbench"
+version = "0.1.0"
+
+[[tool.streamlit.component.components]]
+name = "graph_workbench"
+asset_dir = "frontend/build"

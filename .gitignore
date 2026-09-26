@@ -1,0 +1,78 @@
+# Python bytecode and environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+__pypackages__/
+
+# Python packaging
+*.egg
+*.egg-info/
+/build/
+dist/
+wheelhouse/
+pip-wheel-metadata/
+MANIFEST
+
+# Test, coverage, and type-checking output
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.pytype/
+.pyright/
+.coverage
+.coverage.*
+coverage.xml
+coverage.json
+coverage/
+htmlcov/
+lcov.info
+junit*.xml
+pytest*.xml
+playwright-report/
+test-results/
+blob-report/
+
+# Generated documentation and temporary output
+site/
+.tmp/
+*.log
+*.tmp
+*.bak
+
+# Frontend dependencies
+node_modules/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+.pypirc
+.streamlit/secrets.toml
+
+# Editors, notebooks, and operating-system metadata
+.vscode/
+.idea/
+*.code-workspace
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Local agent configuration
+.agents/
+.codex/
+
+# Private maintainer notes and release checklists
+.maintainer/
+
+# Deliberately unshipped example scratch pages
+/examples/debug/*.py

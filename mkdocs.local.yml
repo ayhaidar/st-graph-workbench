@@ -1,0 +1,5 @@
+INHERIT: mkdocs.yml
+
+# Serve documentation at the local web root. The production configuration keeps
+# the /st-graph-workbench/ prefix required by GitHub Pages.
+site_url: null

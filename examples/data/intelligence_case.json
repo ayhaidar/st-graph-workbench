@@ -1,0 +1,163 @@
+{
+    "nodes": [
+        {
+            "data": {
+                "id": "vehicle_abc123",
+                "label": "MAIN_VEHICLE",
+                "name": "ABC123",
+                "type": "Vehicle",
+                "risk": "high"
+            },
+            "position": {
+                "x": 80,
+                "y": 160
+            }
+        },
+        {
+            "data": {
+                "id": "vehicle_alpha",
+                "label": "VEHICLE",
+                "name": "ALPHA",
+                "type": "Vehicle",
+                "risk": "medium"
+            },
+            "position": {
+                "x": 80,
+                "y": 330
+            }
+        },
+        {
+            "data": {
+                "id": "location_harbor",
+                "label": "PLACE",
+                "name": "Harbor camera",
+                "type": "Location"
+            },
+            "position": {
+                "x": 350,
+                "y": 130
+            }
+        },
+        {
+            "data": {
+                "id": "location_warehouse",
+                "label": "PLACE",
+                "name": "Warehouse gate",
+                "type": "Location"
+            },
+            "position": {
+                "x": 350,
+                "y": 340
+            }
+        },
+        {
+            "data": {
+                "id": "time_0814",
+                "label": "TIME",
+                "name": "2024-09-02 08:14",
+                "type": "Timestamp"
+            },
+            "position": {
+                "x": 600,
+                "y": 100
+            }
+        },
+        {
+            "data": {
+                "id": "time_0841",
+                "label": "TIME",
+                "name": "2024-09-02 08:41",
+                "type": "Timestamp"
+            },
+            "position": {
+                "x": 600,
+                "y": 350
+            }
+        },
+        {
+            "data": {
+                "id": "person_maya_reed",
+                "label": "PERSON",
+                "name": "Maya Reed",
+                "type": "Person"
+            },
+            "position": {
+                "x": 850,
+                "y": 210
+            }
+        },
+        {
+            "data": {
+                "id": "phone_0412",
+                "label": "PHONE",
+                "name": "0412 000 111",
+                "type": "Device"
+            },
+            "position": {
+                "x": 850,
+                "y": 410
+            }
+        }
+    ],
+    "edges": [
+        {
+            "data": {
+                "id": "abc123-harbor",
+                "label": "SEEN_AT",
+                "source": "vehicle_abc123",
+                "target": "location_harbor",
+                "confidence": 0.94
+            }
+        },
+        {
+            "data": {
+                "id": "abc123-0814",
+                "label": "OBSERVED_DURING",
+                "source": "vehicle_abc123",
+                "target": "time_0814"
+            }
+        },
+        {
+            "data": {
+                "id": "alpha-warehouse",
+                "label": "SEEN_AT",
+                "source": "vehicle_alpha",
+                "target": "location_warehouse",
+                "confidence": 0.88
+            }
+        },
+        {
+            "data": {
+                "id": "alpha-0841",
+                "label": "OBSERVED_DURING",
+                "source": "vehicle_alpha",
+                "target": "time_0841"
+            }
+        },
+        {
+            "data": {
+                "id": "abc123-maya",
+                "label": "REGISTERED_TO",
+                "source": "vehicle_abc123",
+                "target": "person_maya_reed"
+            }
+        },
+        {
+            "data": {
+                "id": "maya-phone",
+                "label": "USES",
+                "source": "person_maya_reed",
+                "target": "phone_0412"
+            }
+        },
+        {
+            "data": {
+                "id": "phone-warehouse",
+                "label": "SEEN_NEAR",
+                "source": "phone_0412",
+                "target": "location_warehouse",
+                "confidence": 0.81
+            }
+        }
+    ]
+}

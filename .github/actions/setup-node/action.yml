@@ -1,0 +1,22 @@
+﻿name: 'Setup Node Environment'
+description: 'Set up the Node.js environment and install dependencies'
+
+inputs:
+  node-version:
+    description: 'Node version to use'
+    required: true
+    default: '24.x'
+
+runs:
+  using: composite
+  steps:
+    - name: 'Setup node'
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      with:
+        node-version: ${{ inputs.node-version }}
+    - name: 'Install Dependencies and Build'
+      working-directory: ./st_graph_workbench/frontend/
+      shell: bash
+      run: |
+        npm ci
+        npm run build

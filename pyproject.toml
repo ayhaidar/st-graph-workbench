@@ -1,0 +1,135 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "st-graph-workbench"
+version = "0.1.0"
+authors = [{ name = "Ali Haidar" }]
+description = "A Streamlit Components v2 graph workbench built on Cytoscape.js"
+dynamic = ["readme"]
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE", "licenses/*.txt", "THIRD_PARTY_NOTICES.md"]
+requires-python = ">=3.10"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Operating System :: OS Independent",
+]
+keywords = ["streamlit", "cytoscape", "graph", "graph workbench", "link analysis"]
+dependencies = [
+  "pandas >= 2.2.2",
+  "streamlit >= 1.57",
+]
+
+[project.urls]
+Homepage = "https://github.com/ayhaidar/st-graph-workbench"
+Documentation = "https://ayhaidar.github.io/st-graph-workbench/"
+Issues = "https://github.com/ayhaidar/st-graph-workbench/issues"
+Repository = "https://github.com/ayhaidar/st-graph-workbench.git"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "hatch_build.py",
+  "README.md",
+  "CONTRIBUTING.md",
+  "SECURITY.md",
+  "CHANGELOG.md",
+  "LICENSE",
+  "NOTICE",
+  "THIRD_PARTY_NOTICES.md",
+  "licenses/**",
+  "mkdocs.yml",
+  "mkdocs.local.yml",
+  "docs/**",
+  "examples/**",
+  "images/logo.png",
+  "images/logo_icon.png",
+  "scripts/capture_docs_screenshots.py",
+  "scripts/verify_minimum_dependencies.py",
+  "scripts/verify_release.py",
+  "st_graph_workbench/*.py",
+  "st_graph_workbench/py.typed",
+  "st_graph_workbench/pyproject.toml",
+  "st_graph_workbench/component/*.py",
+  "st_graph_workbench/frontend/build/**",
+  "st_graph_workbench/frontend/src/**",
+  "st_graph_workbench/frontend/eslint.config.mjs",
+  "st_graph_workbench/frontend/package.json",
+  "st_graph_workbench/frontend/package-lock.json",
+  "st_graph_workbench/frontend/webpack.config.js",
+  "st_graph_workbench/frontend/scripts/**",
+  "tests/**",
+]
+exclude = [
+  "examples/debug/**",
+  "st_graph_workbench/frontend/node_modules/**",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["st_graph_workbench"]
+artifacts = [
+  "st_graph_workbench/pyproject.toml",
+  "st_graph_workbench/frontend/build/**",
+]
+exclude = [
+  "st_graph_workbench/frontend/src/**",
+  "st_graph_workbench/frontend/eslint.config.mjs",
+  "st_graph_workbench/frontend/package.json",
+  "st_graph_workbench/frontend/package-lock.json",
+  "st_graph_workbench/frontend/webpack.config.js",
+  "st_graph_workbench/frontend/scripts/**",
+]
+
+[tool.hatch.metadata.hooks.custom]
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+fixable = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+# Continuations of earlier README steps, executed together by walkthrough tests.
+"docs/snippets/readme_style.py" = ["F821"]
+"docs/snippets/readme_selection.py" = ["F821"]
+
+[tool.mypy]
+files = ["st_graph_workbench"]
+python_version = "3.10"
+follow_imports = "skip"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+strict_equality = true
+
+[tool.pytest.ini_options]
+addopts = "--reruns=0"
+
+[project.optional-dependencies]
+dev = [
+  "ruff",
+  "pytest",
+  "pytest-playwright",
+  "pytest-rerunfailures",
+  "mypy",
+]
+docs = [
+  "mkdocs >= 1.6, < 2",
+  "mkdocs-material >= 9.7, < 10",
+  "mkdocstrings[python] >= 1, < 2",
+]
