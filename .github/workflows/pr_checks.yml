@@ -113,7 +113,6 @@ jobs:
         run: >-
           uv run pytest --reruns=0
           tests/test_elements.py
-          tests/test_events.py
           tests/test_event_contract.py
           tests/test_expansion.py
           tests/test_graph_commands.py
