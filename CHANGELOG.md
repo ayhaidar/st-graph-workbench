@@ -201,6 +201,9 @@ No unreleased changes.
 
 ### Fixed
 
+- Bundled node icons now resolve relative to the Components v2 frame, so SVG
+  assets render on Streamlit Community Cloud as well as local servers.
+
 - The progressive-loading button keeps a compact plus icon at all viewport
   widths instead of inheriting percentage sizing from icon-only toolbar buttons.
 

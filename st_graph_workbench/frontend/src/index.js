@@ -220,7 +220,8 @@ function getElementId(element) {
 
 function resolveAssetUrl(path, assetBasePath) {
     const assetPath = path.replace(/^\.\//, "");
-    return `${assetBasePath.replace(/\/$/, "")}/${assetPath}`;
+    const basePath = `${assetBasePath.replace(/\/$/, "")}/`;
+    return new URL(assetPath, new URL(basePath, document.baseURI)).href;
 }
 
 function resolveStyleAssetUrls(style, assetBasePath) {
@@ -291,7 +292,7 @@ function getThemeBase(parentElement) {
 function normalizeRenderData(data = {}) {
     const assetBasePath =
         data["assetBasePath"] ||
-        "/_stcore/bidi-components/st_graph_workbench.graph_workbench";
+        "./_stcore/bidi-components/st_graph_workbench.graph_workbench";
     const performanceProfile = data["performanceProfile"] || "default";
     const hasElements =
         Object.prototype.hasOwnProperty.call(data, "elements") &&

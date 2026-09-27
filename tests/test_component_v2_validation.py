@@ -13,9 +13,23 @@ from graph_test_helpers import (
     get_node_pos,
     open_toolbox_menu,
 )
+from st_graph_workbench.component import component as api
 
 PAGE_NAME = "Components V2 Validation"
 ROOT = Path(__file__).resolve().parents[1]
+ELEMENTS = {"nodes": [{"data": {"id": "asset-test"}}], "edges": []}
+
+
+def test_component_asset_base_path_is_frame_relative(monkeypatch) -> None:
+    calls = []
+    monkeypatch.setattr(api.st, "session_state", {})
+    monkeypatch.setattr(api, "_component_func", lambda **kwargs: calls.append(kwargs))
+
+    api.graph_workbench(ELEMENTS)
+
+    asset_base_path = calls[0]["data"]["assetBasePath"]
+    assert asset_base_path.startswith("./_stcore/bidi-components/")
+    assert not asset_base_path.startswith("/")
 
 
 def test_frontend_html_templates_do_not_contain_invalid_attributes() -> None:
@@ -145,6 +159,11 @@ def test_v2_validation_page_renders_two_independent_components(page: Page):
     assert "icons/directions_car.svg" in left_icon
     assert "_stcore/bidi-components" in right_icon
     assert "icons/person.svg" in right_icon
+    for icon_url in (left_icon, right_icon):
+        assert icon_url.startswith("http://")
+        response = page.request.get(icon_url)
+        assert response.ok
+        assert response.headers["content-type"].startswith("image/svg+xml")
 
 
 def test_v2_validation_instances_keep_badge_toggle_separate(page: Page):

@@ -950,7 +950,7 @@ def graph_workbench(
             "elementsSync": elements_sync,
             "componentKey": component_key,
             "events": events_dump,
-            "assetBasePath": f"/_stcore/bidi-components/{_COMPONENT_NAME}",
+            "assetBasePath": f"./_stcore/bidi-components/{_COMPONENT_NAME}",
             "selectionMode": selection_mode,
             "returnSelection": return_selection,
             "showSelectionDetails": show_selection_details,
