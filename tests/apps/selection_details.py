@@ -9,6 +9,7 @@ st.session_state.setdefault("revision", 0)
 st.session_state.setdefault("events", 0)
 st.session_state.setdefault("updated", False)
 st.session_state.setdefault("removed", False)
+st.session_state["render_count"] = st.session_state.get("render_count", 0) + 1
 
 
 def receive():
@@ -25,6 +26,7 @@ with st.container(horizontal=True):
         st.session_state.removed = True
     if st.button("New graph key"):
         st.session_state.revision += 1
+st.caption(f"Render marker: {st.session_state.render_count}")
 
 elements = {
     "nodes": [

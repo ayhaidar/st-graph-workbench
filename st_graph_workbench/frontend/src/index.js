@@ -33,6 +33,8 @@ import initExpansionControls from "./components/expansionControls.js";
 const CONTAINER_ID = "container";
 const SYNC_REQUEST_ACTION = "_graph_workbench_sync_request";
 const CONTAINER_RESIZE_DEBOUNCE_MS = 80;
+const COMPONENT_ASSET_PATH =
+    "/_stcore/bidi-components/st_graph_workbench.graph_workbench/";
 const COMPONENT_INSTANCES = new WeakMap();
 const COMPONENT_UI_STATE = new Map();
 
@@ -220,6 +222,17 @@ function getElementId(element) {
 
 function resolveAssetUrl(path, assetBasePath) {
     const assetPath = path.replace(/^\.\//, "");
+    const componentScript = Array.from(document.scripts).find(({ src }) => {
+        if (!src) return false;
+        return new URL(src, document.baseURI).pathname.includes(
+            COMPONENT_ASSET_PATH
+        );
+    });
+    if (componentScript) {
+        // The bundle URL includes hosting prefixes such as Streamlit Cloud's
+        // `/~/+/`; sibling assets must retain that exact prefix.
+        return new URL(assetPath, new URL("./", componentScript.src)).href;
+    }
     const basePath = `${assetBasePath.replace(/\/$/, "")}/`;
     return new URL(assetPath, new URL(basePath, document.baseURI)).href;
 }

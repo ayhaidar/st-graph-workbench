@@ -1,5 +1,6 @@
 """Panel preferences must never take ownership of the graph's selection."""
 
+import re
 from pathlib import Path
 
 import pytest
@@ -55,12 +56,22 @@ def toggle(component, visible):
     component.locator("#selectionControls summary").click()
 
 
+def run_and_wait_for_rerun(page, action):
+    marker = page.get_by_text(re.compile(r"^Render marker: \d+$"))
+    previous = marker.text_content()
+    action()
+    expect(marker).not_to_have_text(previous, timeout=15000)
+    wait_for_app_idle(page)
+
+
 def set_app_preference(page, visible):
     control = page.get_by_role("checkbox", name="Python details preference", exact=True)
     if control.is_checked() != visible:
-        page.get_by_text("Python details preference", exact=True).click()
+        run_and_wait_for_rerun(
+            page,
+            lambda: page.get_by_text("Python details preference", exact=True).click(),
+        )
     expect(control).to_be_checked(checked=visible)
-    wait_for_app_idle(page)
 
 
 @pytest.mark.parametrize("clear_control", ["selectionClear", "infopanelClear"])
@@ -110,8 +121,10 @@ def test_explicit_clear_removes_analysis_but_preserves_search_and_other_graph(
     assert get_cy(graph).evaluate(
         "el => el._cyreg.cy.nodes('.search-match').map(n => n.id())"
     ) == ["a"]
-    page.get_by_role("button", name="Rerun", exact=True).click()
-    wait_for_app_idle(page)
+    run_and_wait_for_rerun(
+        page,
+        lambda: page.get_by_role("button", name="Rerun", exact=True).click(),
+    )
     assert (
         get_cy(graph).evaluate("el => el._cyreg.cy.elements('.analysis-result').length")
         == 0
@@ -189,11 +202,16 @@ def test_preferences_survive_reruns_updates_and_are_instance_local(
     expect(second.locator("#infopanel")).to_be_visible()
     get_cy(first).evaluate("el => el._cyreg.cy.scratch('details-test', true)")
     before = runtime(first)
-    page.get_by_role("button", name="Rerun", exact=True).click()
-    wait_for_app_idle(page)
+    run_and_wait_for_rerun(
+        page,
+        lambda: page.get_by_role("button", name="Rerun", exact=True).click(),
+    )
     expect(first.locator("#infopanel")).to_be_hidden()
     assert runtime(first) == before
-    page.get_by_role("button", name="Update records", exact=True).click()
+    run_and_wait_for_rerun(
+        page,
+        lambda: page.get_by_role("button", name="Update records", exact=True).click(),
+    )
     expect(first.locator("#selectionShowDetails")).not_to_be_checked()
     page.wait_for_function(
         "el => el._cyreg.cy.getElementById('b').data('name') === 'Updated B'",
@@ -203,8 +221,10 @@ def test_preferences_survive_reruns_updates_and_are_instance_local(
     set_app_preference(page, False)
     toggle(first, True)
     expect(first.locator("#infopanel")).to_be_visible()
-    page.get_by_role("button", name="Rerun", exact=True).click()
-    wait_for_app_idle(page)
+    run_and_wait_for_rerun(
+        page,
+        lambda: page.get_by_role("button", name="Rerun", exact=True).click(),
+    )
     expect(first.locator("#infopanel")).to_be_visible()
     toggle(first, False)
     set_app_preference(page, True)
@@ -217,8 +237,10 @@ def test_preferences_survive_reruns_updates_and_are_instance_local(
     set_app_preference(page, False)
     expect(first.locator("#infopanel")).to_be_hidden()
     toggle(first, True)
-    page.get_by_role("button", name="New graph key", exact=True).click()
-    wait_for_app_idle(page)
+    run_and_wait_for_rerun(
+        page,
+        lambda: page.get_by_role("button", name="New graph key", exact=True).click(),
+    )
     wait_for_cy_ready(first)
     expect(first.locator("#selectionShowDetails")).not_to_be_checked()
     expect(second.locator("#selectionShowDetails")).to_be_checked()

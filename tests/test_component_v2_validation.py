@@ -32,6 +32,16 @@ def test_component_asset_base_path_is_frame_relative(monkeypatch) -> None:
     assert not asset_base_path.startswith("/")
 
 
+def test_frontend_asset_resolution_uses_the_loaded_bundle_path() -> None:
+    source = (ROOT / "st_graph_workbench" / "frontend" / "src" / "index.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Array.from(document.scripts)" in source
+    assert "COMPONENT_ASSET_PATH" in source
+    assert 'new URL("./", componentScript.src)' in source
+
+
 def test_frontend_html_templates_do_not_contain_invalid_attributes() -> None:
     frontend_src = ROOT / "st_graph_workbench" / "frontend" / "src"
 
@@ -161,6 +171,26 @@ def test_v2_validation_page_renders_two_independent_components(page: Page):
     assert "icons/person.svg" in right_icon
     for icon_url in (left_icon, right_icon):
         assert icon_url.startswith("http://")
+        response = page.request.get(icon_url)
+        assert response.ok
+        assert response.headers["content-type"].startswith("image/svg+xml")
+
+
+def test_icons_resolve_under_a_nested_streamlit_base_path(
+    page: Page,
+    serve_streamlit_at_base_path,
+):
+    port = serve_streamlit_at_base_path(ROOT / "examples" / "app.py", "/~/+")
+    page.goto(f"http://localhost:{port}/~/+/")
+    graph = get_component(page)
+
+    icon_urls = get_cy(graph).evaluate(
+        "el => el._cyreg.cy.nodes().map(node => node.style('background-image'))"
+    )
+
+    assert icon_urls
+    for icon_url in icon_urls:
+        assert "/~/+/_stcore/bidi-components/" in icon_url
         response = page.request.get(icon_url)
         assert response.ok
         assert response.headers["content-type"].startswith("image/svg+xml")

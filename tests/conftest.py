@@ -20,9 +20,13 @@ def get_free_port():
         return sock.getsockname()[1]
 
 
-def wait_for_streamlit(port, process):
+def wait_for_streamlit(port, process, *, base_url_path=""):
     deadline = time.time() + 20
     last_error = None
+    base_url_path = base_url_path.strip("/")
+    health_path = (
+        f"/{base_url_path}/_stcore/health" if base_url_path else "/_stcore/health"
+    )
     while time.time() < deadline:
         if process.poll() is not None:
             raise RuntimeError(
@@ -31,7 +35,7 @@ def wait_for_streamlit(port, process):
             )
         try:
             with urllib.request.urlopen(
-                f"http://localhost:{port}/_stcore/health",
+                f"http://localhost:{port}{health_path}",
                 timeout=1,
             ) as response:
                 if response.status == 200:
@@ -42,25 +46,25 @@ def wait_for_streamlit(port, process):
     raise RuntimeError(f"Streamlit did not start on port {port}: {last_error}")
 
 
-def start_streamlit(app_path, port, cwd):
-    return subprocess.Popen(
-        [
-            sys.executable,
-            "-m",
-            "streamlit",
-            "run",
-            str(app_path),
-            "--server.port",
-            str(port),
-            "--server.headless",
-            "true",
-            "--browser.gatherUsageStats",
-            "false",
-            "--server.fileWatcherType",
-            "none",
-        ],
-        cwd=cwd,
-    )
+def start_streamlit(app_path, port, cwd, *, base_url_path=""):
+    command = [
+        sys.executable,
+        "-m",
+        "streamlit",
+        "run",
+        str(app_path),
+        "--server.port",
+        str(port),
+        "--server.headless",
+        "true",
+        "--browser.gatherUsageStats",
+        "false",
+        "--server.fileWatcherType",
+        "none",
+    ]
+    if base_url_path:
+        command.append(f"--server.baseUrlPath=/{base_url_path.strip('/')}")
+    return subprocess.Popen(command, cwd=cwd)
 
 
 def stop_process(process):
@@ -82,13 +86,18 @@ def stop_process(process):
 
 
 @contextmanager
-def streamlit_server(app_path, *, cwd=ROOT_DIR):
+def streamlit_server(app_path, *, cwd=ROOT_DIR, base_url_path=""):
     last_error = None
     for _ in range(3):
         port = get_free_port()
-        process = start_streamlit(app_path, port, cwd)
+        process = start_streamlit(
+            app_path,
+            port,
+            cwd,
+            base_url_path=base_url_path,
+        )
         try:
-            wait_for_streamlit(port, process)
+            wait_for_streamlit(port, process, base_url_path=base_url_path)
         except RuntimeError as error:
             last_error = error
             stop_process(process)
@@ -111,6 +120,14 @@ def run_streamlit():
 def serve_streamlit():
     with ExitStack() as stack:
         yield lambda path: stack.enter_context(streamlit_server(path))
+
+
+@pytest.fixture
+def serve_streamlit_at_base_path():
+    with ExitStack() as stack:
+        yield lambda path, base_url_path: stack.enter_context(
+            streamlit_server(path, base_url_path=base_url_path)
+        )
 
 
 @pytest.fixture
