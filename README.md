@@ -294,6 +294,9 @@ The MkDocs site summarizes what the library can do and provides feature guides,
 practical recipes, troubleshooting help, and detailed API documentation for
 the public functions, parameters, return values, and errors.
 
+Read the published manual at
+[ayhaidar.github.io/st-graph-workbench](https://ayhaidar.github.io/st-graph-workbench/).
+
 Run it on any unused local port. This example uses `8000`:
 
 ```powershell
@@ -303,14 +306,14 @@ uv run mkdocs serve -f mkdocs.local.yml --dev-addr 127.0.0.1:8000
 
 Start with:
 
-- [Documentation home](https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/index.md)
-- [Installation](https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/getting-started/installation.md)
-- [Quick start](https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/getting-started/quickstart.md)
-- [Feature guides](https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/guides/rendering-layouts.md)
-- [API reference](https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/reference/index.md)
-- [Troubleshooting](https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/advanced/troubleshooting.md)
+- [Documentation home](https://ayhaidar.github.io/st-graph-workbench/)
+- [Installation](https://ayhaidar.github.io/st-graph-workbench/getting-started/installation/)
+- [Quick start](https://ayhaidar.github.io/st-graph-workbench/getting-started/quickstart/)
+- [Feature guides](https://ayhaidar.github.io/st-graph-workbench/guides/rendering-layouts/)
+- [API reference](https://ayhaidar.github.io/st-graph-workbench/reference/)
+- [Troubleshooting](https://ayhaidar.github.io/st-graph-workbench/advanced/troubleshooting/)
 
-Build the static documentation without publishing it:
+Build the static documentation locally:
 
 ```powershell
 uv run mkdocs build --strict

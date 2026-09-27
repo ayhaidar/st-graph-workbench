@@ -34,11 +34,12 @@ Existing demo URLs still work. The full README walkthrough is at `/readme`;
 other legacy documentation routes remain accessible but are not duplicated in
 the main navigation.
 
-[MkDocs](../docs/index.md) contains the manual and API reference, and the
+[MkDocs](https://ayhaidar.github.io/st-graph-workbench/) contains the manual
+and API reference, and the
 [learning path](../docs/getting-started/tutorials.md) describes the sequence.
 Serve MkDocs separately on an unused port such as `8000`. Sidebar links default
-to `http://localhost:8000`; set `GRAPH_WORKBENCH_DOCS_URL` when using another
-documentation address.
+to the published manual; set `GRAPH_WORKBENCH_DOCS_URL=http://localhost:8000`
+when developing both applications locally.
 
 ## Development
 

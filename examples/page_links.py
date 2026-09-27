@@ -4,10 +4,11 @@ import os
 from pathlib import PurePosixPath
 
 
+DEFAULT_DOCS_URL = "https://ayhaidar.github.io/st-graph-workbench"
+
+
 def docs_url(path=""):
-    base = os.environ.get("GRAPH_WORKBENCH_DOCS_URL", "http://localhost:8000").rstrip(
-        "/"
-    )
+    base = os.environ.get("GRAPH_WORKBENCH_DOCS_URL", DEFAULT_DOCS_URL).rstrip("/")
     if not path:
         return f"{base}/"
     destination = PurePosixPath(path).with_suffix("")

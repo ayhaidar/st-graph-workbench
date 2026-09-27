@@ -76,8 +76,9 @@ pages under `examples/tutorials/` and have pure-function tests.
 The existing demo routes remain unchanged. The previous live README is at
 `/readme`, and legacy documentation routes remain available without cluttering
 the tutorial navigation. Use the sidebar's manual and API links for the
-canonical reference. Their local default is port `8000`;
-`GRAPH_WORKBENCH_DOCS_URL` can point to another documentation address.
+canonical reference. The examples link to the published manual by default.
+`GRAPH_WORKBENCH_DOCS_URL=http://localhost:8000` can point them to a local
+documentation server while editing the two applications together.
 
 ## Conclusion
 

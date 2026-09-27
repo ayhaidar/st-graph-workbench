@@ -267,7 +267,9 @@ def test_manual_links_handle_index_pages_and_custom_base(monkeypatch):
     from examples.page_links import docs_url
 
     monkeypatch.delenv("GRAPH_WORKBENCH_DOCS_URL", raising=False)
-    assert docs_url("reference/index.md") == "http://localhost:8000/reference/"
+    assert docs_url("reference/index.md") == (
+        "https://ayhaidar.github.io/st-graph-workbench/reference/"
+    )
     monkeypatch.setenv("GRAPH_WORKBENCH_DOCS_URL", "https://example.test/manual/")
     assert docs_url("guides/selection-search.md") == (
         "https://example.test/manual/guides/selection-search/"
