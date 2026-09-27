@@ -74,7 +74,6 @@ with show_example(__file__):
                     layout={"name": "preset", "fit": False, "animate": False},
                 ),
             ]
-            st.rerun()
 with st.expander("Import positions JSON"):
     uploaded = st.file_uploader(
         "Position file", type=["json"], key="tutorial_13_widget_upload"

@@ -165,14 +165,29 @@ def test_exports_and_position_restore(page, run_streamlit):
     page.get_by_role("button", name=re.compile("Save positions$")).click()
     idle(page)
     original = get_node_view(component, "ABC123")["model"]
-    drag_node(page, component, "ABC123", dx=50, dy=30)
-    page.get_by_role("button", name=re.compile("Restore positions$")).click()
+    moved = drag_node(page, component, "ABC123", dx=50, dy=30)
+    assert moved["model"] != pytest.approx(original, abs=1)
+
+    # The drag returns positions to Python and reruns Streamlit. Wait for that
+    # update before clicking a Python widget that could otherwise be replaced.
+    idle(page)
+    component = get_component(page)
+    restore = page.get_by_role("button", name=re.compile("Restore positions$"))
+    expect(restore).to_be_enabled(timeout=15000)
+    restore.click()
+    idle(page)
+
+    component = get_component(page)
+    cy_element = get_cy(component).element_handle()
+    assert cy_element is not None
     page.wait_for_function(
-        """position => {
-        const actual=document.querySelector('#cy')._cyreg.cy.getElementById('ABC123').position();
-        return Math.abs(actual.x-position.x)<1 && Math.abs(actual.y-position.y)<1;
+        """payload => {
+        const cy = payload.element._cyreg?.cy;
+        const actual = cy?.getElementById('ABC123').position();
+        return actual && Math.abs(actual.x-payload.position.x)<1
+            && Math.abs(actual.y-payload.position.y)<1;
     }""",
-        arg=original,
+        arg={"element": cy_element, "position": original},
     )
     select_nodes(component, ["ABC123"])
     for selector, suffix in [
