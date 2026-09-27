@@ -244,6 +244,13 @@ def test_remove_button(page: Page):
     remove = get_toolbox_button(component, "nodeActionsRemove")
     expect(remove).to_have_attribute("title", "Remove Nodes")
     remove.click()
+
+    # Cytoscape removes the node optimistically before Streamlit has processed
+    # the event. Wait for the Python-rendered payload to acknowledge the action
+    # before checking the resulting graph and notice.
+    returned = page.get_by_test_id("stJson").first
+    expect(returned).to_contain_text("remove", timeout=30000)
+    expect(returned).to_contain_text(NODE_ID)
     wait_for_node_ids(
         component,
         [node_id for node_id in INITIAL_NODE_IDS if node_id != NODE_ID],
