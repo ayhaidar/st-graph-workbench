@@ -87,6 +87,10 @@ with st.container(horizontal=True):
     st.button(
         "Restart loading", icon=":material/restart_alt:", on_click=restart_loading
     )
+st.caption(
+    f"Selected response: {outcome}. "
+    f"Armed response: {state.get('next_outcome', 'Success')}."
+)
 if state.get("error"):
     st.error(state["error"])
 with show_example(__file__):

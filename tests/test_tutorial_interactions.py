@@ -51,6 +51,17 @@ def counts(page, nodes, edges):
     )
 
 
+def assert_loading_checkpoint(page, component, loaded, pan):
+    expect(component.locator("#progressiveLoadingStatus")).to_have_text(
+        f"{loaded} / 180", timeout=15000
+    )
+    counts(page, loaded + 3, loaded)
+    assert get_cy(component).evaluate("el => el._cyreg.cy.scratch('tutorialTest')")
+    assert get_cy(component).evaluate("el => el._cyreg.cy.pan()") == pytest.approx(
+        pan, abs=0.01
+    )
+
+
 def test_crud_node_then_edge_and_cancel(page, run_streamlit):
     component = open_lesson(page, run_streamlit, "crud")
     get_cy(component).evaluate("el => el._cyreg.cy.scratch('tutorialTest', true)")
@@ -126,13 +137,24 @@ def test_analysis_scenarios_return_results(
 
 def test_loading_failure_retry_completion_and_restart(page, run_streamlit):
     component = open_lesson(page, run_streamlit, "loading")
+    choose(page, "Next response", "Fail once")
+    expect(
+        page.get_by_text(
+            "Selected response: Fail once. Armed response: Success.", exact=True
+        )
+    ).to_be_visible(timeout=15000)
+    page.get_by_role("button", name=re.compile("Arm next response$")).click()
+    expect(
+        page.get_by_text(
+            "Selected response: Fail once. Armed response: Fail once.", exact=True
+        )
+    ).to_be_visible(timeout=15000)
+    idle(page)
+    component = get_component(page)
     get_cy(component).evaluate(
         "el => { const cy=el._cyreg.cy; cy.scratch('tutorialTest',true); cy.pan({x:30,y:40}); }"
     )
     before = get_cy(component).evaluate("el => el._cyreg.cy.pan()")
-    choose(page, "Next response", "Fail once")
-    page.get_by_role("button", name=re.compile("Arm next response$")).click()
-    idle(page)
     button = component.locator("#progressiveLoadingButton")
     button.click()
     expect(
@@ -141,23 +163,16 @@ def test_loading_failure_retry_completion_and_restart(page, run_streamlit):
         )
     ).to_be_visible()
     expect(button).to_be_enabled()
-    counts(page, 33, 30)
+    assert_loading_checkpoint(page, component, 30, before)
     button.click()
-    expect(component.locator("#progressiveLoadingStatus")).to_have_text("60 / 180")
+    assert_loading_checkpoint(page, component, 60, before)
     for count in range(90, 181, 30):
         button.click()
-        expect(component.locator("#progressiveLoadingStatus")).to_have_text(
-            f"{count} / 180", timeout=15000
-        )
-    counts(page, 183, 180)
+        assert_loading_checkpoint(page, component, count, before)
     expect(button).to_be_disabled()
-    assert get_cy(component).evaluate("el => el._cyreg.cy.pan()") == pytest.approx(
-        before
-    )
     page.get_by_role("button", name=re.compile("Restart loading$")).click()
-    counts(page, 33, 30)
+    assert_loading_checkpoint(page, component, 30, before)
     expect(button).to_be_enabled()
-    assert get_cy(component).evaluate("el => el._cyreg.cy.scratch('tutorialTest')")
 
 
 def test_exports_and_position_restore(page, run_streamlit):

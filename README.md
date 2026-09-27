@@ -59,6 +59,10 @@ structured user actions back to the application.
 
 ## See it in action
 
+**[Open the live interactive tutorials](https://st-graph-workbench.streamlit.app/)**
+to build a first graph and then explore styling, selection, analysis, expansion,
+editing, commands, exports, and progressive loading in the browser.
+
 **Find a relationship, then use the result in Python.** Select two records and
 run shortest path: the component highlights the route and returns its node IDs,
 edge IDs, distance, and analysis scope. Use those results to filter a dataframe,
@@ -321,7 +325,9 @@ uv run mkdocs build --strict
 
 ## Interactive Examples
 
-Run the separate Streamlit demonstration app on port `8502`:
+Use the
+[hosted tutorial and Feature Lab app](https://st-graph-workbench.streamlit.app/),
+or run the same Streamlit application locally on port `8502`:
 
 ```powershell
 uv run streamlit run examples/app.py --server.port 8502
