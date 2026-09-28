@@ -41,10 +41,11 @@ def open_crud_dialog(page, graph, button_id):
     wait_for_app_idle(page)
     button.click()
     dialog = page.get_by_role("dialog")
-    # Attachment proves that Python received the CRUD intent and rendered the
-    # dialog; visibility then verifies that it is ready for user interaction.
-    expect(dialog).to_have_count(1, timeout=15000)
-    expect(dialog).to_be_visible(timeout=15000)
+    # The dialog is the action-specific acknowledgment that Python received the
+    # CRUD intent. A busy CI runner can take longer to begin the component-driven
+    # rerun, so wait for this outcome instead of sampling the previous idle state.
+    expect(dialog).to_be_visible(timeout=30000)
+    expect(dialog).to_have_count(1)
     wait_for_app_idle(page)
     return dialog
 

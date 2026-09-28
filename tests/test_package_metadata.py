@@ -486,7 +486,9 @@ def test_readme_links_and_banner_resolve_from_the_checkout():
     overview = (ROOT_DIR / "examples/docs/project_overview.py").read_text(
         encoding="utf-8"
     )
-    [banner] = re.findall(r'<img[^>]+src="([^"]+)"', readme)
+    [banner] = re.findall(
+        r'<img\s+src="([^"]+)"\s+alt="st-graph-workbench logo"', readme
+    )
     assert banner in overview
 
 

@@ -242,6 +242,10 @@ with show_example(__file__):
         on_change=handle_crud,
         height=600,
     )
+# Render the modal beside the component that emitted the request. Streamlit can
+# then show it before rebuilding the lesson's longer documentation sections.
+if state.get("pending"):
+    record_dialog(state["pending"])
 # Conditional feedback must not shift the live component's element-tree position.
 if state.get("notice"):
     st.success(state["notice"])
@@ -311,5 +315,3 @@ finish_lesson(
     mistakes="Never treat a browser request as authorization. Validate IDs and endpoints before saving. Use unique command IDs; do not change the component key after each edit.",
     conclusion="Your application can attach validation, authorization, and persistence to every CRUD request without losing the interactive graph.",
 )
-if state.get("pending"):
-    record_dialog(state["pending"])

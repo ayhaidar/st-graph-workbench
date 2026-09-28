@@ -4,6 +4,21 @@
   <img src="images/logo.png" alt="st-graph-workbench logo" width="400">
 </p>
 
+<p align="center">
+  <a href="https://st-graph-workbench.streamlit.app/"><img alt="Live tutorials" src="https://img.shields.io/badge/Tutorials-Open_live_app-FF4B4B?logo=streamlit&amp;logoColor=white"></a>
+  <a href="https://ayhaidar.github.io/st-graph-workbench/"><img alt="Documentation" src="https://img.shields.io/badge/Docs-MkDocs-526CFE?logo=materialformkdocs&amp;logoColor=white"></a>
+  <a href="https://pypi.org/project/st-graph-workbench/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/st-graph-workbench?logo=pypi&amp;logoColor=white"></a>
+  <a href="https://github.com/ayhaidar/st-graph-workbench/actions/workflows/pr_checks.yml"><img alt="Continuous integration" src="https://github.com/ayhaidar/st-graph-workbench/actions/workflows/pr_checks.yml/badge.svg"></a>
+  <a href="https://pypi.org/project/st-graph-workbench/"><img alt="Supported Python versions" src="https://img.shields.io/pypi/pyversions/st-graph-workbench?logo=python&amp;logoColor=white"></a>
+  <a href="LICENSE"><img alt="Apache 2.0 license" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg"></a>
+</p>
+
+<p align="center">
+  <strong><a href="https://st-graph-workbench.streamlit.app/">Open the live interactive tutorials</a></strong>
+  |
+  <a href="https://ayhaidar.github.io/st-graph-workbench/">Read the documentation</a>
+</p>
+
 `st-graph-workbench` is a general-purpose graph component for Streamlit,
 powered by Cytoscape.js and integrated with Streamlit Components v2.
 It helps you turn Python records into explorable
