@@ -41,6 +41,7 @@ blob-report/
 
 # Generated documentation and temporary output
 site/
+brag-output/
 .tmp/
 *.log
 *.tmp

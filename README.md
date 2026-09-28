@@ -74,6 +74,21 @@ structured user actions back to the application.
 
 ## See it in action
 
+<p align="center">
+  <a href="https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/assets/media/st-graph-workbench-overview.mp4">
+    <img src="https://raw.githubusercontent.com/ayhaidar/st-graph-workbench/main/docs/assets/images/st-graph-workbench-overview.jpg" alt="Watch the narrated st-graph-workbench capability overview" width="960">
+  </a>
+</p>
+
+<p align="center">
+  <strong><a href="https://github.com/ayhaidar/st-graph-workbench/blob/main/docs/assets/media/st-graph-workbench-overview.mp4">Watch the 25-second narrated capability overview</a></strong>
+</p>
+
+The video demonstrates search and graph analysis, independent expansion and
+collapse, Python-owned CRUD, browser-local editing, and bounded progressive
+loading. The examples use synthetic records, while the interaction patterns
+apply to any connected dataset.
+
 **[Open the live interactive tutorials](https://st-graph-workbench.streamlit.app/)**
 to build a first graph and then explore styling, selection, analysis, expansion,
 editing, commands, exports, and progressive loading in the browser.

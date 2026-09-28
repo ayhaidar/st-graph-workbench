@@ -52,6 +52,22 @@ structured user actions back to the application.
 
 ## See it in action
 
+<video
+  controls
+  preload="metadata"
+  poster="assets/images/st-graph-workbench-overview.jpg"
+  style="display: block; width: 100%; max-width: 960px; margin: 0 auto 1rem;"
+>
+  <source src="assets/media/st-graph-workbench-overview.mp4" type="video/mp4">
+  Your browser does not support embedded video. Open the
+  <a href="assets/media/st-graph-workbench-overview.mp4">25-second capability overview</a>.
+</video>
+
+The narrated overview demonstrates search and graph analysis, independent
+expansion and collapse, Python-owned CRUD, browser-local editing, and bounded
+progressive loading. The examples use synthetic records, while the interaction
+patterns apply to any connected dataset.
+
 Select two records, run shortest path, and use the returned IDs in Python.
 The highlighted route below contains five nodes and four edges; the separate
 connected group remains outside the result.
