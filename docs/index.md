@@ -63,7 +63,7 @@ structured user actions back to the application.
   <a href="assets/media/st-graph-workbench-overview.mp4">25-second capability overview</a>.
 </video>
 
-The narrated overview demonstrates search and graph analysis, independent
+The overview demonstrates search and graph analysis, independent
 expansion and collapse, Python-owned CRUD, browser-local editing, and bounded
 progressive loading. The examples use synthetic records, while the interaction
 patterns apply to any connected dataset.

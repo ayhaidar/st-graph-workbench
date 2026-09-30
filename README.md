@@ -76,12 +76,12 @@ structured user actions back to the application.
 
 <p align="center">
   <a href="https://cdn.jsdelivr.net/gh/ayhaidar/st-graph-workbench@main/docs/assets/media/st-graph-workbench-overview.mp4">
-    <img src="https://raw.githubusercontent.com/ayhaidar/st-graph-workbench/main/docs/assets/images/st-graph-workbench-overview.jpg" alt="Watch the narrated st-graph-workbench capability overview" width="960">
+    <img src="https://raw.githubusercontent.com/ayhaidar/st-graph-workbench/main/docs/assets/images/st-graph-workbench-overview.jpg" alt="Watch the st-graph-workbench capability overview" width="960">
   </a>
 </p>
 
 <p align="center">
-  <strong><a href="https://cdn.jsdelivr.net/gh/ayhaidar/st-graph-workbench@main/docs/assets/media/st-graph-workbench-overview.mp4">Play the 25-second narrated capability overview</a></strong>
+  <strong><a href="https://cdn.jsdelivr.net/gh/ayhaidar/st-graph-workbench@main/docs/assets/media/st-graph-workbench-overview.mp4">Play the 25-second capability overview</a></strong>
 </p>
 
 The video demonstrates search and graph analysis, independent expansion and
